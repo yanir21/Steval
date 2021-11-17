@@ -1,4 +1,3 @@
-![Steval logo](docs/Steval Logo.png)
 
 ## Project setup
 ```
