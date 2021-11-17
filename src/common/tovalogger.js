@@ -4,7 +4,7 @@ const log = (level, message, { $options }, ...logData) => {
 	fetch(INDEX_NAME, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Basic ZWxhc3RpYzpUMHZhbEwwZ3Mh',
+			Authorization: 'Basic ********',
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
