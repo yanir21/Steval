@@ -1,0 +1,52 @@
+{
+	"arrowParens": "avoid",
+
+	"bracketSpacing": true,
+	"configPath": "",
+
+	"disableLanguages": [],
+
+	"endOfLine": "lf",
+
+	"htmlWhitespaceSensitivity": "css",
+
+	"ignorePath": ".prettierignore",
+
+	"insertPragma": false,
+
+	"jsxBracketSameLine": false,
+
+	"jsxSingleQuote": false,
+
+	"packageManager": "npm",
+
+	"prettierPath": "",
+
+	"printWidth": 100,
+
+	"proseWrap": "preserve",
+
+	"quoteProps": "as-needed",
+
+	"requireConfig": false,
+
+	"requirePragma": false,
+
+	"resolveGlobalModules": false,
+
+	"semi": true,
+
+	"singleQuote": true,
+
+	"tabWidth": 4,
+
+	"trailingComma": "none",
+
+	"useEditorConfig": true,
+
+	"useTabs": true,
+
+	"vueIndentScriptAndStyle": false,
+
+	"withNodeModules": false
+}

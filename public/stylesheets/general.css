@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Assistant');
+#app {
+    font-family: 'Assistant' ; 
+}
+
+div {
+    font-family: 'Assistant' ;
+    direction: rtl;
+}

@@ -1,0 +1,71 @@
+image: docker:git
+services:
+    - docker:dind
+
+stages:
+    - build
+    - deploy
+
+.build_image: &build_image |
+    mkdir ~/.docker
+    echo -e "{\n \"proxies\":\n {\n   \"default\":\n   {\n     \"httpProxy\":\"$PROXY_IP\",\n     \"httpsProxy\":\"$PROXY_IP\",\n     \"noProxy\":\"\"\n   }\n }\n}" > ~/.docker/config.json
+    echo $VUE_APP_CLIENT_ID
+    docker build --build-arg VUE_APP_GRAPHQL_HTTP=$VUE_APP_GRAPHQL_HTTP --build-arg VUE_APP_GRAPHQL_WS=$VUE_APP_GRAPHQL_WS --build-arg VUE_APP_TENANT_ID=$VUE_APP_TENANT_ID --build-arg VUE_APP_CLIENT_ID=$VUE_APP_CLIENT_ID --build-arg VUE_APP_REDIRECT_URI=$VUE_APP_REDIRECT_URI -t bsmhdevteam/steval:"$(date +%F)$TAG" .
+    docker tag bsmhdevteam/steval:"$(date +%F)$TAG" bsmhdevteam/steval:"latest$TAG"
+    docker login -u bsmhdevteam -p $DOCKER_HUB_PASSWORD
+    docker push bsmhdevteam/steval:"$(date +%F)$TAG"
+    docker push bsmhdevteam/steval:"latest$TAG"
+
+.deploy_image: &deploy_image |
+    echo -e "Acquire::http::Proxy \"$PROXY_IP\";\nAcquire::https::Proxy \"$PROXY_IP\";" > /etc/apt/apt.conf
+    apt-get update -y
+    apt-get install sshpass -y
+    sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no -tt $SERVER_USER@$SERVER_IP docker service update --image bsmhdevteam/steval:"latest$TAG" steval_app
+
+build_test:
+    image: docker:git
+    stage: build
+    environment:
+        name: test
+    variables:
+        TAG: '-test'
+    script:
+        - *build_image
+    only:
+        - test
+
+deploy_test:
+    image: ubuntu:18.04
+    stage: deploy
+    environment:
+        name: test
+    variables:
+        TAG: '-test'
+    script:
+        - *deploy_image
+    only:
+        - test
+
+build_prod:
+    image: docker:git
+    stage: build
+    environment:
+        name: prod
+    variables:
+        TAG: ''
+    script:
+        - *build_image
+    only:
+        - prod
+
+deploy_prod:
+    image: ubuntu:18.04
+    stage: deploy
+    environment:
+        name: prod
+    variables:
+        TAG: ''
+    script:
+        - *deploy_image
+    only:
+        - prod
